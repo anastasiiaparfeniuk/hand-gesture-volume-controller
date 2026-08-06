@@ -1,6 +1,6 @@
 
 import cv2
-from HandTrackingMin import HandTracker
+from hand_tracker import HandTracker
 
 cap = cv2.VideoCapture(0)
 
