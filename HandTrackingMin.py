@@ -5,7 +5,9 @@ from mediapipe.tasks.python import vision
 import time
 
 class HandTracker:
-    def __init__(self, model_path='hand_landmarker.task', _num_hands=2):
+
+    
+    def __init__(self, model_path='hand_landmarker.task', _num_hands=6):
         self.base_options = python.BaseOptions(model_asset_path=model_path)
         self.options = vision.HandLandmarkerOptions(base_options=self.base_options, running_mode=vision.RunningMode.VIDEO, num_hands=_num_hands)
         self.detector = vision.HandLandmarker.create_from_options(self.options)
@@ -21,14 +23,14 @@ class HandTracker:
         self.result = None
         self.landmarks = []
 
-    def detect_frame(self, frame):
+
+    def detect(self, frame):
         rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         mp_image = mp.Image(image_format=mp.ImageFormat.SRGB, data=rgb)
         self.timestamp_ms = int(time.time() * 1000)
         self.result = self.detector.detect_for_video(mp_image, self.timestamp_ms)
         self.landmarks = self._extract_landmarks()
 
-    # result = detector.detect_for_video(mp_image, timestamp_ms)
 
     def _extract_landmarks(self):
 
@@ -59,7 +61,6 @@ class HandTracker:
                         y = int(landmark.y * height)
         
                         cv2.circle(frame, (x, y), 5, (0, 255, 0), -1)
-                        cv2.putText(frame, str(id), (x+10, y-10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
 
 
     def draw_connections(self, frame):
@@ -90,10 +91,10 @@ class HandTracker:
                 cv2.putText(frame, str(id), (x+10, y-10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
 
 
-    def draw_frame(self, frame, result):
+    def draw(self, frame):
         height, width, _ = frame.shape
 
-        for hand in result.hand_landmarks:
+        for hand in self.result.hand_landmarks:
             for id, landmark in enumerate(hand):
                 x = int(landmark.x * width)
                 y = int(landmark.y * height)
@@ -101,7 +102,7 @@ class HandTracker:
                 cv2.circle(frame, (x, y), 5, (0, 255, 0), -1)
                 cv2.putText(frame, str(id), (x+10, y-10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
 
-        for hand in result.hand_landmarks:
+        for hand in self.result.hand_landmarks:
             for start, end in self.HAND_CONNECTIONS:
                 x1 = int(hand[start].x * width)
                 y1 = int(hand[start].y * height)
