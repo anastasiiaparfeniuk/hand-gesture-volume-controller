@@ -6,7 +6,7 @@ import time
 
 class HandTracker:
 
-    def __init__(self, model_path='hand_landmarker.task', _num_hands=6):
+    def __init__(self, model_path='models/hand_landmarker.task', _num_hands=6):
         self.base_options = python.BaseOptions(model_asset_path=model_path)
         self.options = vision.HandLandmarkerOptions(base_options=self.base_options, running_mode=vision.RunningMode.VIDEO, num_hands=_num_hands)
         self.detector = vision.HandLandmarker.create_from_options(self.options)
