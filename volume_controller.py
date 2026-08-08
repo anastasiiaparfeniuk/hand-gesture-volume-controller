@@ -1,11 +1,9 @@
 from hand_tracker import HandTracker
 import cv2
 import math
+import numpy as np
 
 # TODO: Implement the volume control logic using the HandTracker class.
-# 1. get the two fingertips
-# 2. calculate the distance between them
-# 3. map the distance to a volume level (0-100)
 # 4. set the system volume to the calculated level
 # 5. connecting everything together in a loop that captures frames from the webcam and processes them using the HandTracker class.
 # 6. add visual feedback to the user 
@@ -15,6 +13,15 @@ import math
 def calculate_distance(point1, point2):
     return math.hypot(point2["x"] - point1["x"], point2["y"] - point1["y"])
 
+def distance_to_volume_percentage(distance):
+    MIN_DISTANCE=0.032
+    MAX_DISTANCE=0.432
+    volume = np.interp(
+    distance,
+    [MIN_DISTANCE, MAX_DISTANCE],
+    [0, 100]
+    )
+    return volume
 
 
 def main():
@@ -31,17 +38,19 @@ def main():
         landmarks = hand_tracker.landmarks
 
         if landmarks:
-             hand = landmarks[0]
-             thumb_tip = hand[4]
-             index_tip = hand[8]
-             distance = calculate_distance(thumb_tip, index_tip)
-
-        cv2.putText(frame, f"Distance: {distance:.3f}",(20, 50), 
-                    cv2.FONT_HERSHEY_SIMPLEX,
-                    1,(255, 255, 255),2
-            )
-
-        cv2.imshow("Webcam", frame)
+            hand = landmarks[0]
+            thumb_tip = hand[4]
+            index_tip = hand[8]
+            distance = calculate_distance(thumb_tip, index_tip)
+            volume = distance_to_volume_percentage(distance)
+            cv2.putText(frame, f"Distance: {distance:.3f}",(20, 50), 
+                        cv2.FONT_HERSHEY_SIMPLEX,
+                        1,(255, 255, 255),2
+                )
+            cv2.putText(frame, f"Volume: {volume:.0f}%",(20, 90),
+                        cv2.FONT_HERSHEY_SIMPLEX,1,(255, 255, 255),2
+                )
+            
         if cv2.waitKey(1) == 27:
                 break
 
