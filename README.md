@@ -83,15 +83,6 @@ Then use these gestures:
 `-- README.md
 ```
 
-## Creating a Real Demo GIF
-
-To replace the illustrative GIF with a real recording:
-
-1. Run `python volume_controller.py`.
-2. Record a short clip showing the webcam window and the system volume changing.
-3. Convert the clip to a GIF named `assets/demo.gif`.
-4. Keep the GIF short, ideally 5-8 seconds, so it loads quickly on GitHub.
-
 ## Troubleshooting
 
 - If the webcam does not open, check that no other app is using it.
