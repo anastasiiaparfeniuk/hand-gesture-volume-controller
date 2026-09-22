@@ -74,7 +74,7 @@ Then use these gestures:
 ```text
 .
 |-- assets/
-|   `-- demo.gif
+|   `-- volume_controller.gif
 |-- models/
 |   `-- hand_landmarker.task
 |-- hand_tracker.py
